@@ -5,11 +5,15 @@ import com.lopefied.instawebsite.product.BarcodeProductService;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 
+import javax.inject.Inject;
+
 /**
  * Created by lope on 4/30/15.
  */
 public class UploadProductJob extends Job {
     public static final int PRIORITY = 1;
+
+    @Inject
     BarcodeProductService barcodeProductService;
 
     int barcodeProductId;

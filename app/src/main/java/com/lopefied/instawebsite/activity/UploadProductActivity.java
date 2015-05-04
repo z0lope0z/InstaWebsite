@@ -10,25 +10,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.lopefied.instawebsite.InstaWebsiteApplication;
 import com.lopefied.instawebsite.R;
-import com.lopefied.instawebsite.module.ApplicationComponent;
-import com.lopefied.instawebsite.module.BarcodeProductModule;
-import com.lopefied.instawebsite.module.JobQueueModule;
-import com.lopefied.instawebsite.module.SphereIOModule;
 import com.lopefied.instawebsite.product.BarcodeProductService;
-import com.lopefied.sphereandroidsdk.auth.SphereAuthConfig;
-import com.lopefied.sphereandroidsdk.client.SphereApiConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import dagger.Component;
 
 public class UploadProductActivity extends ActionBarActivity {
     public static final String TAG = UploadProductActivity.class.getSimpleName();
@@ -43,18 +36,6 @@ public class UploadProductActivity extends ActionBarActivity {
 
     String barcode;
     byte[] imageByteArray;
-
-    @Singleton
-    @Component(
-            dependencies = {ApplicationComponent.class},
-            modules = {
-                    BarcodeProductModule.class,
-            })
-    public static interface BarcodeProductComponent {
-        void inject(UploadProductActivity activity);
-    }
-
-    private BarcodeProductComponent component;
 
     @OnClick(R.id.btn_grab_barcode)
     public void onClickGrabBarcode(View view) {
@@ -84,22 +65,8 @@ public class UploadProductActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-        SphereAuthConfig sphereAuthConfig = new SphereAuthConfig.Builder()
-                .authUrl("https://DtFNbGzILvE3vljBPPymIZPg:62ljT-1BbWaYy9_A5cKW4EtSsAZmbQnZ@auth.sphere.io")
-                .projectKey("7-eleven")
-                .clientId("DtFNbGzILvE3vljBPPymIZPg")
-                .clientSecret("62ljT-1BbWaYy9_A5cKW4EtSsAZmbQnZ")
-                .build();
-        SphereApiConfig sphereApiConfig = new SphereApiConfig.Builder()
-                .apiUrl("https://api.sphere.io")
-                .authConfig(sphereAuthConfig)
-                .build();
-        component = DaggerUploadProductActivity_BarcodeProductComponent.builder()
-                .sphereIOModule(new SphereIOModule(sphereApiConfig))
-                .barcodeProductModule(new BarcodeProductModule(this))
-                .jobQueueModule(new JobQueueModule(this))
-                .build();
-        component.inject(this);
+        InstaWebsiteApplication.getInstance().getProductComponent().inject(this);
+        System.out.println("");
     }
 
     @Override
