@@ -12,6 +12,8 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import retrofit.client.OkClient;
@@ -28,6 +30,7 @@ public class SphereIOModule {
     }
 
     @Provides
+    @Singleton
     public SphereClient provideSphereClient() {
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.interceptors().add(new Interceptor() {
@@ -44,11 +47,13 @@ public class SphereIOModule {
     }
 
     @Provides
+    @Singleton
     public ProductTypeService provideProductTypeService(SphereClient sphereClient) {
         return new ProductTypeServiceImpl(sphereClient);
     }
 
     @Provides
+    @Singleton
     public ProductService provideProductService(SphereClient sphereClient) {
         return new ProductServiceImpl(sphereClient);
     }

@@ -12,12 +12,16 @@ import android.widget.EditText;
 
 import com.lopefied.instawebsite.InstaWebsiteApplication;
 import com.lopefied.instawebsite.R;
+import com.lopefied.instawebsite.module.DaggerProductComponent;
+import com.lopefied.instawebsite.module.InstaWebsiteModule;
+import com.lopefied.instawebsite.module.ProductComponent;
 import com.lopefied.instawebsite.product.BarcodeProductService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -65,8 +69,11 @@ public class UploadProductActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-        InstaWebsiteApplication.getInstance().getProductComponent().inject(this);
-        System.out.println("");
+        ProductComponent component = DaggerProductComponent.builder()
+                .appComponent(InstaWebsiteApplication.component(this))
+                .instaWebsiteModule(new InstaWebsiteModule((InstaWebsiteApplication) getApplicationContext()))
+                .build();
+        component.inject(this);
     }
 
     @Override

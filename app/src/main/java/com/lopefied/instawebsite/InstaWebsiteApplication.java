@@ -1,17 +1,12 @@
 package com.lopefied.instawebsite;
 
 import android.app.Application;
+import android.content.Context;
 
-import com.lopefied.instawebsite.module.JobQueueComponent;
-import com.lopefied.instawebsite.module.DaggerProductComponent;
-import com.lopefied.instawebsite.module.JobQueueModule;
-import com.lopefied.instawebsite.module.ProductComponent;
-import com.lopefied.instawebsite.module.SphereIOModule;
+import com.lopefied.instawebsite.module.AppComponent;
+import com.lopefied.instawebsite.module.DaggerAppComponent;
 import com.lopefied.sphereandroidsdk.auth.SphereAuthConfig;
 import com.lopefied.sphereandroidsdk.client.SphereApiConfig;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lope on 4/30/15.
@@ -19,17 +14,22 @@ import java.util.List;
 public class InstaWebsiteApplication extends Application {
 
     private static InstaWebsiteApplication instance;
-    List<Object> objectList = new ArrayList<Object>();
 
-    JobQueueComponent component;
+    AppComponent component;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
+        component = DaggerAppComponent.Initializer.buildAndInject(this);
     }
 
-    public JobQueueComponent getComponent() {
-        return component;
+    public static AppComponent component(Context context) {
+        return app(context).component;
+    }
+
+    public static InstaWebsiteApplication app(Context context) {
+        return (InstaWebsiteApplication) context.getApplicationContext();
     }
 
     public SphereApiConfig getSphereApiConfig() {
@@ -45,21 +45,8 @@ public class InstaWebsiteApplication extends Application {
                 .build();
     }
 
-    public ProductComponent getProductComponent() {
-        return DaggerProductComponent.builder()
-                .sphereIOModule(new SphereIOModule(InstaWebsiteApplication.getInstance().getSphereApiConfig()))
-                .jobQueueModule(new JobQueueModule(this))
-                .build();
-    }
-
     public static InstaWebsiteApplication getInstance() {
         return instance;
     }
 
-    public static void injectMembers(Object object) {
-    }
-
-    public static class SphereApiConfigNotSetException extends Exception {
-
-    }
 }

@@ -13,13 +13,14 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by lope on 4/30/15.
+ * Created by lope on 5/4/15.
  */
 @Module
-public class ProductModule {
+public class InstaWebsiteModule {
+
     Context context;
 
-    public ProductModule(Context context) {
+    public InstaWebsiteModule(Context context) {
         this.context = context;
     }
 
@@ -31,4 +32,5 @@ public class ProductModule {
         return new BarcodeProductServiceImpl(productTypeService, productService, jobManager,
                 context);
     }
+
 }

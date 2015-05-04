@@ -4,12 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.lopefied.instawebsite.InstaWebsiteApplication;
-import com.lopefied.instawebsite.module.SphereIOModule;
-import com.lopefied.instawebsite.module.scope.App;
-import com.lopefied.instawebsite.product.BarcodeProductService;
-import com.lopefied.instawebsite.product.BarcodeProductServiceImpl;
-import com.lopefied.sphereandroidsdk.product.ProductService;
-import com.lopefied.sphereandroidsdk.producttype.ProductTypeService;
 import com.path.android.jobqueue.BaseJob;
 import com.path.android.jobqueue.JobManager;
 import com.path.android.jobqueue.config.Configuration;
@@ -59,8 +53,9 @@ public class JobQueueModule {
                 .injector(new DependencyInjector() {
                     @Override
                     public void inject(BaseJob job) {
-                        JobComponent component = DaggerJobComponent.builder()
-                                .productComponent(application.getProductComponent())
+                        ProductComponent component = DaggerProductComponent.builder()
+                                .appComponent(InstaWebsiteApplication.component(application))
+                                .instaWebsiteModule(new InstaWebsiteModule(application))
                                 .build();
                         component.inject(this);
                     }
@@ -69,6 +64,7 @@ public class JobQueueModule {
     }
 
     @Provides
+    @Singleton
     public JobManager provideJobManager() {
         return new JobManager(mContext, mConfiguration);
     }
