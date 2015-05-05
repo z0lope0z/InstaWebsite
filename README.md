@@ -31,3 +31,6 @@ Dependency Injection library to help keep things decoupled
 ##### [EventBus](https://github.com/greenrobot/EventBus)
 The app uses an event bus to notify observers for completed jobs
 
+##### [Realm](http://realm.io/)
+New and shiny mobile database. Just wanted to play around with it lol. 
+
