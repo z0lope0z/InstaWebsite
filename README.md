@@ -31,6 +31,10 @@ Dependency Injection library to help keep things decoupled
 ##### [EventBus](https://github.com/greenrobot/EventBus)
 The app uses an event bus to notify observers for completed jobs
 
+##### [FloatingActionButton](https://github.com/makovkastar/FloatingActionButton)
+Used to display the circular floating button to add new products to the upload list
+
 ##### [Realm](http://realm.io/)
-New and shiny mobile database. Just wanted to play around with it lol. 
+New and shiny mobile database. Just wanted to play around with it lol.
+
 
