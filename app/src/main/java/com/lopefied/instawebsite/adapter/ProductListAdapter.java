@@ -40,6 +40,11 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         this.barcodeProducts = barcodeProducts;
     }
 
+    public void setItems(List<BarcodeProduct> barcodeProducts) {
+        this.barcodeProducts = barcodeProducts;
+        notifyDataSetChanged();
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public ProductListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,

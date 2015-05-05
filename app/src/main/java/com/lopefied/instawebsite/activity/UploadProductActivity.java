@@ -61,6 +61,7 @@ public class UploadProductActivity extends ActionBarActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        finish();
     }
 
     @Override

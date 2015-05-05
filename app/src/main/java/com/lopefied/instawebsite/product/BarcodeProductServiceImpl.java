@@ -115,19 +115,19 @@ public class BarcodeProductServiceImpl implements BarcodeProductService {
     @Override
     public List<BarcodeProduct> getBarcodeProducts() {
         Realm realm = Realm.getInstance(context);
-        RealmQuery<BarcodeProduct> query = realm.where(BarcodeProduct.class)
-                .beginGroup()
-                .equalTo("status", BarcodeProduct.STATUS_FAILURE)
-                .endGroup()
-                .beginGroup()
-                .equalTo("status", BarcodeProduct.STATUS_PENDING)
-                .endGroup()
-                .beginGroup()
-                .equalTo("status", BarcodeProduct.STATUS_UPLOADING)
-                .endGroup()
-                .beginGroup()
-                .equalTo("status", BarcodeProduct.STATUS_UPLOADED)
-                .endGroup();
+        RealmQuery<BarcodeProduct> query = realm.where(BarcodeProduct.class);
+//                .beginGroup()
+//                .equalTo("status", BarcodeProduct.STATUS_FAILURE)
+//                .endGroup()
+//                .beginGroup()
+//                .equalTo("status", BarcodeProduct.STATUS_PENDING)
+//                .endGroup()
+//                .beginGroup()
+//                .equalTo("status", BarcodeProduct.STATUS_UPLOADING)
+//                .endGroup()
+//                .beginGroup()
+//                .equalTo("status", BarcodeProduct.STATUS_UPLOADED)
+//                .endGroup();
         return query.findAll();
     }
 }
