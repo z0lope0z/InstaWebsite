@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.lopefied.instawebsite.InstaWebsiteApplication;
+import com.lopefied.instawebsite.job.UploadProductJob;
 import com.path.android.jobqueue.BaseJob;
 import com.path.android.jobqueue.JobManager;
 import com.path.android.jobqueue.config.Configuration;
@@ -57,7 +58,8 @@ public class JobQueueModule {
                                 .appComponent(InstaWebsiteApplication.component(application))
                                 .instaWebsiteModule(new InstaWebsiteModule(application))
                                 .build();
-                        component.inject(this);
+                        if (job instanceof UploadProductJob)
+                            component.inject((UploadProductJob) job);
                     }
                 })
                 .build();

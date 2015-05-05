@@ -2,10 +2,13 @@ package com.lopefied.instawebsite.job;
 
 import com.lopefied.instawebsite.model.BarcodeProduct;
 import com.lopefied.instawebsite.product.BarcodeProductService;
+import com.lopefied.sphereandroidsdk.product.Product;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 
 import javax.inject.Inject;
+
+import rx.Observer;
 
 /**
  * Created by lope on 4/30/15.
@@ -33,7 +36,24 @@ public class UploadProductJob extends Job {
     public void onRun() throws Throwable {
         BarcodeProduct barcodeProduct = barcodeProductService.get(barcodeProductId);
         barcodeProductService.changeStatus(barcodeProduct, BarcodeProduct.STATUS_UPLOADING);
-        barcodeProductService.upload(barcodeProductService.get(barcodeProductId));
+        barcodeProductService
+                .upload(barcodeProductService.get(barcodeProductId))
+                .subscribe(new Observer<Product>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        System.out.println("");
+                    }
+
+                    @Override
+                    public void onNext(Product product) {
+                        System.out.println("");
+                    }
+                });
     }
 
     @Override

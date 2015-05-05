@@ -1,15 +1,18 @@
 package com.lopefied.instawebsite.product;
 
 import com.lopefied.instawebsite.model.BarcodeProduct;
+import com.lopefied.sphereandroidsdk.product.Product;
 
 import java.io.IOException;
 import java.util.List;
+
+import rx.Observable;
 
 /**
  * Created by lope on 4/30/15.
  */
 public interface BarcodeProductService {
-    public void upload(BarcodeProduct barcodeProduct) throws IOException;
+    public Observable<Product> upload(BarcodeProduct barcodeProduct) throws IOException;
 
     public void launchUploadJob(String name, String barcode, byte[] imageBytes);
 

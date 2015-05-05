@@ -21,6 +21,8 @@ import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
+import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by lope on 4/30/15.
@@ -43,20 +45,36 @@ public class BarcodeProductServiceImpl implements BarcodeProductService {
     }
 
     @Override
-    public void upload(BarcodeProduct barcodeProduct) throws IOException {
-        String name = barcodeProduct.getName();
-        byte[] imageBytes = barcodeProduct.getImage();
+    public Observable<Product> upload(BarcodeProduct barcodeProduct) throws IOException {
+        final String name = barcodeProduct.getName();
+        final byte[] imageBytes = barcodeProduct.getImage();
         // TODO get existing version instead of draft
         ProductTypeDraft productTypeDraft = new ProductTypeDraft.Builder()
                 .name("BarcodeProduct")
                 .description("BarcodeProduct").build();
-        ProductType productType = productTypeService.createProductTypeObs(productTypeDraft).toBlocking().first();
-        Product product = productService.createProductObs(new ProductDraft.Builder()
-                .name(new LocalizedName(Locale.ENGLISH.getLanguage(), name))
-                .slug(new LocalizedSlug(Locale.ENGLISH.getLanguage(), new Slugify().slugify(name)))
-                .productType(productType)
-                .build()).toBlocking().first();
-        productService.uploadImage(product, imageBytes).toBlocking().first();
+        return productTypeService
+                .createProductTypeObs(productTypeDraft)
+                .flatMap(new Func1<ProductType, Observable<Product>>() {
+                    @Override
+                    public Observable<Product> call(ProductType productType) {
+                        try {
+                            return productService.createProductObs(new ProductDraft.Builder()
+                                    .name(new LocalizedName(Locale.ENGLISH.getLanguage(), name))
+                                    .slug(new LocalizedSlug(Locale.ENGLISH.getLanguage(), new Slugify().slugify(name)))
+                                    .productType(productType)
+                                    .build());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                .flatMap(new Func1<Product, Observable<Product>>() {
+                    @Override
+                    public Observable<Product> call(Product product) {
+                        return productService.uploadImage(product, imageBytes);
+                    }
+                });
     }
 
     @Override
@@ -68,6 +86,10 @@ public class BarcodeProductServiceImpl implements BarcodeProductService {
                 .build();
         Realm realm = Realm.getInstance(context);
         realm.beginTransaction();
+        // WTF realm!!!!!
+        // https://github.com/realm/realm-java/issues/469
+        int nextID = (int) (realm.where(BarcodeProduct.class).maximumInt("id") + 1);
+        barcodeProduct.setId(nextID);
         realm.copyToRealmOrUpdate(barcodeProduct);
         realm.commitTransaction();
         jobManager.addJob(new UploadProductJob(barcodeProduct));

@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

@@ -8,6 +8,7 @@ import com.lopefied.sphereandroidsdk.producttype.ProductTypeService;
 import com.lopefied.sphereandroidsdk.producttype.ProductTypeServiceImpl;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
@@ -35,12 +36,9 @@ public class SphereIOModule {
         OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.interceptors().add(new Interceptor() {
             @Override
-            public Response intercept(Chain chain) throws IOException {
-                String request = chain.request().toString();
-                String requestBody = chain.request().body().toString();
-                Response response = chain.proceed(chain.request());
-                String dirty = response.body().string();
-                return response;
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request request = chain.request();
+                return chain.proceed(request);
             }
         });
         return new SphereClient(sphereApiConfig, new OkClient(okHttpClient));
